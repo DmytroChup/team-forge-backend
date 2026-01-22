@@ -1,0 +1,27 @@
+### Создать игрока Dendi
+POST http://localhost:8080/api/players
+Content-Type: application/json
+
+{
+  "username": "Dendi3",
+  "steamId": "76561198000000005",
+  "rank": "DIVINE",
+  "stars": 2,
+  "positions": ["MID", "CARRY"],
+  "discordId": "111111111122"
+}
+
+### Создать игрока Miracle
+POST http://localhost:8080/api/players
+Content-Type: application/json
+
+{
+  "username": "Miracle3",
+  "steamId": "76561198000000006",
+  "rank": "IMMORTAL",
+  "positions": ["CARRY"],
+  "discordId": "22222222212"
+}
+
+### Получить список всех игроков
+GET http://localhost:8080/api/players
