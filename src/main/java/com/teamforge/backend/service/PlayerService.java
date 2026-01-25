@@ -43,6 +43,11 @@ public class PlayerService {
         return playerRepository.save(player);
     }
 
+    public Player getPlayerById(Long id) {
+        return playerRepository.findById(id)
+                .orElseThrow(() -> new PlayerAlreadyExistsException("Player with ID " + id + " not found"));
+    }
+
     public List<Player> getAllPlayers() {
         return playerRepository.findAll();
     }

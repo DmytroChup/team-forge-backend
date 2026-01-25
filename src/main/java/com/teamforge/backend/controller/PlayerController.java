@@ -20,6 +20,11 @@ public class PlayerController {
         return playerService.createPlayer(request);
     }
 
+    @GetMapping("/{id}")
+    public Player getPlayerById(@PathVariable Long id) {
+        return playerService.getPlayerById(id);
+    }
+
     @GetMapping
     public List<Player> getAllPlayers() {
         return playerService.getAllPlayers();

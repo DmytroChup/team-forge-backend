@@ -16,4 +16,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     boolean existsByUsername(String username);
 
     boolean existsByDiscordId(String discordId);
+
+    Player getPlayerById(Long id);
 }

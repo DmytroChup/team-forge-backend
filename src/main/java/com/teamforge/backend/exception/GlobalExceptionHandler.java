@@ -12,13 +12,24 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(PlayerAlreadyExistsException.class)
     public ResponseEntity<ApiError> handleDuplicateEntry(PlayerAlreadyExistsException ex) {
-        ApiError error  = ApiError.builder()
+        ApiError error = ApiError.builder()
                 .status(HttpStatus.CONFLICT.value())
                 .message(ex.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
 
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(PlayerNotFoundException.class)
+    public ResponseEntity<ApiError> handleNotFound(PlayerNotFoundException ex) {
+        ApiError error = ApiError.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .message(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
