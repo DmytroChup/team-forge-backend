@@ -1,6 +1,7 @@
 package com.teamforge.backend.service;
 
 import com.teamforge.backend.dto.CreatePlayerRequest;
+import com.teamforge.backend.exception.PlayerAlreadyExistsException;
 import com.teamforge.backend.model.Player;
 import com.teamforge.backend.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,19 @@ public class PlayerService {
 
     @Transactional
     public Player createPlayer(CreatePlayerRequest request) {
+
+        if(playerRepository.existsBySteamId(request.steamId())) {
+            throw new PlayerAlreadyExistsException("Player with Steam ID " + request.steamId() + " already exists");
+        }
+
+        if(playerRepository.existsByUsername(request.username())) {
+            throw new PlayerAlreadyExistsException("Username " + request.username() + " is already taken");
+        }
+
+        if(playerRepository.existsByDiscordId(request.discordId())) {
+            throw new PlayerAlreadyExistsException("Discord account is already linked to another player");
+        }
+
         Player player = Player.builder()
                 .username(request.username())
                 .steamId(request.steamId())

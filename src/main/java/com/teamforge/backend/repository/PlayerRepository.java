@@ -10,4 +10,10 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     Optional<Player> findByUsername(String username);
 
     Optional<Player> findBySteamId(String steamId);
+
+    boolean existsBySteamId(String steamId);
+
+    boolean existsByUsername(String username);
+
+    boolean existsByDiscordId(String discordId);
 }
