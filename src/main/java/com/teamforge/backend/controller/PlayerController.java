@@ -1,6 +1,7 @@
 package com.teamforge.backend.controller;
 
 import com.teamforge.backend.dto.CreatePlayerRequest;
+import com.teamforge.backend.dto.PlayerSearchRequest;
 import com.teamforge.backend.model.Player;
 import com.teamforge.backend.service.PlayerService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,11 @@ public class PlayerController {
     @PostMapping
     public Player createPlayer(@RequestBody CreatePlayerRequest request) {
         return playerService.createPlayer(request);
+    }
+
+    @PostMapping("/search")
+    public List<Player> searchPlayers(@RequestBody PlayerSearchRequest request) {
+        return playerService.searchPlayers(request);
     }
 
     @GetMapping("/{id}")

@@ -1,9 +1,11 @@
 package com.teamforge.backend.service;
 
 import com.teamforge.backend.dto.CreatePlayerRequest;
+import com.teamforge.backend.dto.PlayerSearchRequest;
 import com.teamforge.backend.exception.PlayerAlreadyExistsException;
 import com.teamforge.backend.model.Player;
 import com.teamforge.backend.repository.PlayerRepository;
+import com.teamforge.backend.specification.PlayerSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,11 @@ public class PlayerService {
                 .build();
 
         return playerRepository.save(player);
+    }
+
+    public List<Player> searchPlayers(PlayerSearchRequest request) {
+        var spec = PlayerSpecification.getSpec(request);
+        return playerRepository.findAll(spec);
     }
 
     public Player getPlayerById(Long id) {
