@@ -2,7 +2,9 @@ package com.teamforge.backend.service;
 
 import com.teamforge.backend.dto.CreatePlayerRequest;
 import com.teamforge.backend.dto.PlayerSearchRequest;
+import com.teamforge.backend.dto.ProfileUpdateRequest;
 import com.teamforge.backend.exception.PlayerAlreadyExistsException;
+import com.teamforge.backend.exception.PlayerNotFoundException;
 import com.teamforge.backend.model.Player;
 import com.teamforge.backend.repository.PlayerRepository;
 import com.teamforge.backend.specification.PlayerSpecification;
@@ -45,6 +47,18 @@ public class PlayerService {
         return playerRepository.save(player);
     }
 
+    public Player updatePlayer(ProfileUpdateRequest request) {
+        Player updatedPlayer = playerRepository.findByUsername(request.username())
+                .orElseThrow(() -> new PlayerNotFoundException(
+                        "Player with Username " + request.username() + " not found"));
+
+        updatedPlayer.setRank(request.rank());
+        updatedPlayer.setPositions(request.positions());
+        updatedPlayer.setStars(request.stars());
+
+        return playerRepository.save(updatedPlayer);
+    }
+
     public List<Player> searchPlayers(PlayerSearchRequest request) {
         var spec = PlayerSpecification.getSpec(request);
         return playerRepository.findAll(spec);
@@ -52,7 +66,7 @@ public class PlayerService {
 
     public Player getPlayerById(Long id) {
         return playerRepository.findById(id)
-                .orElseThrow(() -> new PlayerAlreadyExistsException("Player with ID " + id + " not found"));
+                .orElseThrow(() -> new PlayerNotFoundException("Player with ID " + id + " not found"));
     }
 
     public List<Player> getAllPlayers() {
