@@ -1,6 +1,8 @@
 package com.teamforge.backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -31,6 +33,8 @@ public class Player {
     @Enumerated(EnumType.STRING)
     private Rank rank;
 
+    @Min(1)
+    @Max(5)
     @Column(name = "rank_tier")
     private Integer stars;
 

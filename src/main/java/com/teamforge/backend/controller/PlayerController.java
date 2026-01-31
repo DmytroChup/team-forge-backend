@@ -2,8 +2,10 @@ package com.teamforge.backend.controller;
 
 import com.teamforge.backend.dto.CreatePlayerRequest;
 import com.teamforge.backend.dto.PlayerSearchRequest;
+import com.teamforge.backend.dto.ProfileUpdateRequest;
 import com.teamforge.backend.model.Player;
 import com.teamforge.backend.service.PlayerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,11 @@ public class PlayerController {
     @PostMapping
     public Player createPlayer(@RequestBody CreatePlayerRequest request) {
         return playerService.createPlayer(request);
+    }
+
+    @PutMapping("/profile")
+    public Player updatePlayer(@Valid @RequestBody ProfileUpdateRequest request) {
+        return playerService.updatePlayer(request);
     }
 
     @PostMapping("/search")
