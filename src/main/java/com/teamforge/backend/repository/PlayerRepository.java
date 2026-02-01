@@ -17,4 +17,6 @@ public interface PlayerRepository extends JpaRepository<Player, Long>, JpaSpecif
     boolean existsByDiscordId(String discordId);
 
     Optional<Player> findByUsername(String username);
+
+    Optional<Player> findByEmail(String email);
 }
