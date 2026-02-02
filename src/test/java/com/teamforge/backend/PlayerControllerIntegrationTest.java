@@ -2,8 +2,8 @@ package com.teamforge.backend;
 
 import com.teamforge.backend.dto.ProfileUpdateRequest;
 import com.teamforge.backend.model.Player;
-import com.teamforge.backend.model.Position;
-import com.teamforge.backend.model.Rank;
+import com.teamforge.backend.model.enums.DotaPosition;
+import com.teamforge.backend.model.enums.DotaRank;
 import com.teamforge.backend.repository.PlayerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,16 +37,16 @@ class PlayerControllerIntegrationTest {
         Player existingPlayer = Player.builder()
                 .username("TestUser")
                 .steamId("123456789")
-                .rank(Rank.HERALD)
+                .rank(DotaRank.HERALD)
                 .stars(1)
                 .build();
         playerRepository.save(existingPlayer);
 
         ProfileUpdateRequest request = new ProfileUpdateRequest(
                 "TestUser",
-                Rank.DIVINE,
+                DotaRank.DIVINE,
                 5,
-                Set.of(Position.MID)
+                Set.of(DotaPosition.MID)
         );
 
         mockMvc.perform(put("/api/players/profile")
@@ -61,9 +61,9 @@ class PlayerControllerIntegrationTest {
     void checkUpdateProfile_InvalidStars() throws Exception {
         ProfileUpdateRequest request = new ProfileUpdateRequest(
                 "TestUser",
-                Rank.IMMORTAL,
+                DotaRank.IMMORTAL,
                 100,
-                Set.of(Position.CARRY)
+                Set.of(DotaPosition.CARRY)
         );
 
         mockMvc.perform(put("/api/players/profile")

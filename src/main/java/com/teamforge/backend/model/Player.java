@@ -1,5 +1,7 @@
 package com.teamforge.backend.model;
 
+import com.teamforge.backend.model.enums.DotaPosition;
+import com.teamforge.backend.model.enums.DotaRank;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -31,17 +33,17 @@ public class Player {
     private String steamId;
 
     @Enumerated(EnumType.STRING)
-    private Rank rank;
+    private DotaRank rank;
 
     @Min(1)
     @Max(5)
     @Column(name = "rank_tier")
     private Integer stars;
 
-    @ElementCollection(targetClass = Position.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = DotaPosition.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "player_positions", joinColumns = @JoinColumn(name = "player_id"))
     @Enumerated(EnumType.STRING)
-    private Set<Position> positions;
+    private Set<DotaPosition> positions;
 
     private String discordId;
 
