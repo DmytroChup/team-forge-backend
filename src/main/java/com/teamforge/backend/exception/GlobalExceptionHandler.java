@@ -27,8 +27,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
-    @ExceptionHandler(PlayerAlreadyExistsException.class)
-    public ResponseEntity<ApiError> handleDuplicateEntry(PlayerAlreadyExistsException ex) {
+    @ExceptionHandler(DotaProfileAlreadyExistsException.class)
+    public ResponseEntity<ApiError> handleDuplicateEntry(DotaProfileAlreadyExistsException ex) {
         ApiError error = ApiError.builder()
                 .status(HttpStatus.CONFLICT.value())
                 .message(ex.getMessage())
@@ -38,8 +38,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(PlayerNotFoundException.class)
-    public ResponseEntity<ApiError> handleNotFound(PlayerNotFoundException ex) {
+    @ExceptionHandler(DotaProfileNotFoundException.class)
+    public ResponseEntity<ApiError> handleNotFound(DotaProfileNotFoundException ex) {
         ApiError error = ApiError.builder()
                 .status(HttpStatus.NOT_FOUND.value())
                 .message(ex.getMessage())

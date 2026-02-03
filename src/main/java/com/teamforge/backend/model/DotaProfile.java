@@ -3,8 +3,6 @@ package com.teamforge.backend.model;
 import com.teamforge.backend.model.enums.DotaPosition;
 import com.teamforge.backend.model.enums.DotaRank;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

@@ -1,7 +1,7 @@
 package com.teamforge.backend.specification;
 
-import com.teamforge.backend.dto.PlayerSearchRequest;
-import com.teamforge.backend.model.Player;
+import com.teamforge.backend.dto.DotaProfileSearchRequest;
+import com.teamforge.backend.model.DotaProfile;
 import jakarta.persistence.criteria.Predicate;
 import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 @UtilityClass
 public class PlayerSpecification {
 
-    public static Specification<Player> getSpec(PlayerSearchRequest request) {
+    public static Specification<DotaProfile> getSpec(DotaProfileSearchRequest request) {
         return (root, query, criteriaBuilder) -> {
             var predicates = new ArrayList<Predicate>();
 
