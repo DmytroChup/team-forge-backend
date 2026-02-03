@@ -7,47 +7,53 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
+@Entity
+@Table(name = "dota_profiles", indexes = {
+        @Index(name = "idx_dota_user_id", columnList = "user_id"),
+        @Index(name = "idx_dota_rank", columnList = "rank")
+})
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "players")
 @EntityListeners(AuditingEntityListener.class)
-public class Player {
+public class DotaProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String username;
-
-    @Column(unique = true, nullable = false)
-    private String steamId;
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    private User user;
 
     @Enumerated(EnumType.STRING)
     private DotaRank rank;
 
-    @Min(1)
-    @Max(5)
-    @Column(name = "rank_tier")
     private Integer stars;
 
-    @ElementCollection(targetClass = DotaPosition.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "player_positions", joinColumns = @JoinColumn(name = "player_id"))
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "dota_profile_positions", joinColumns = @JoinColumn(name = "profile_id"))
     @Enumerated(EnumType.STRING)
     private Set<DotaPosition> positions;
 
-    private String discordId;
+    private Integer mmr;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean lookingForTeam = false;
 
     @CreatedDate
-    @Column(nullable = false, updatable = true)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 }
