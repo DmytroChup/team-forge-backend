@@ -18,7 +18,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users", indexes = {
-        @Index(name = "idx_username", columnList = "username"),
+        @Index(name = "idx_nickname", columnList = "nickname"),
         @Index(name = "idx_email", columnList = "email"),
         @Index(name = "idx_steam_id", columnList = "steam_id"),
         @Index(name = "idx_discord_id", columnList = "discord_id")
@@ -59,7 +59,7 @@ public class User implements UserDetails {
     private boolean enabled = true;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private DotaProfile dotaProfile;
+    private transient DotaProfile dotaProfile;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
