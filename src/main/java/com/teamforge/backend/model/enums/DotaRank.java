@@ -1,6 +1,6 @@
-package com.teamforge.backend.model;
+package com.teamforge.backend.model.enums;
 
-public enum Rank {
+public enum DotaRank {
     HERALD,
     GUARDIAN,
     CRUSADER,

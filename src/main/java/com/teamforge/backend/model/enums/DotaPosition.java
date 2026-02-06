@@ -1,6 +1,6 @@
-package com.teamforge.backend.model;
+package com.teamforge.backend.model.enums;
 
-public enum Position {
+public enum DotaPosition {
     CARRY,          // pos 1
     MID,            // pos 2
     OFFLANE,        // pos 3
