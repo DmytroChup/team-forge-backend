@@ -54,4 +54,11 @@ public class DotaProfile {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public void assignToUser(User user) {
+        this.user = user;
+        if (user != null) {
+            user.setDotaProfile(this);
+        }
+    }
 }
