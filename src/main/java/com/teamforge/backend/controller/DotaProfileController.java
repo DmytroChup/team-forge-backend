@@ -28,6 +28,12 @@ public class DotaProfileController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteMyProfile(@AuthenticationPrincipal User user) {
+        dotaProfileService.deleteMyProfile(user.getId());
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/search")
     public ResponseEntity<List<DotaProfileResponse>> searchPlayers(@RequestBody DotaProfileSearchRequest request) {
         return ResponseEntity.ok(dotaProfileService.searchProfiles(request));

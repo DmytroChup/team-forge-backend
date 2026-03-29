@@ -72,6 +72,17 @@ public class DotaProfileService {
         }
     }
 
+    @Transactional
+    public void deleteMyProfile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        DotaProfile profile = user.getDotaProfile();
+        if (profile != null) {
+            dotaProfileRepository.delete(profile);
+        }
+    }
+
     public List<DotaProfileResponse> searchProfiles(DotaProfileSearchRequest request) {
         var spec = PlayerSpecification.getSpec(request);
         return dotaProfileRepository.findAll(spec).stream()
