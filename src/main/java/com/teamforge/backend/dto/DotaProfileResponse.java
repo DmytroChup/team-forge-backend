@@ -13,7 +13,8 @@ public record DotaProfileResponse(
         DotaRank rank,
         Integer stars,
         Set<DotaPosition> positions,
-        boolean lookingForTeam
+        boolean lookingForTeam,
+        String steamId
 ) {
     public static DotaProfileResponse fromEntity(User user) {
         DotaProfile profile = user.getDotaProfile();
@@ -23,7 +24,8 @@ public record DotaProfileResponse(
                 profile.getRank(),
                 profile.getStars(),
                 profile.getPositions(),
-                profile.isLookingForTeam()
+                profile.isLookingForTeam(),
+                user.getSteamId()
         );
     }
 
@@ -34,7 +36,8 @@ public record DotaProfileResponse(
                 profile.getRank(),
                 profile.getStars(),
                 profile.getPositions(),
-                profile.isLookingForTeam()
+                profile.isLookingForTeam(),
+                profile.getUser().getSteamId()
         );
     }
 }
