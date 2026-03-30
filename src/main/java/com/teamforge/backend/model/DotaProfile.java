@@ -44,6 +44,9 @@ public class DotaProfile {
 
     private Integer mmr;
 
+    @Column(length = 1000)
+    private String aboutMe;
+
     @Builder.Default
     @Column(nullable = false)
     private boolean lookingForTeam = false;

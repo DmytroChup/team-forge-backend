@@ -44,6 +44,7 @@ public class DotaProfileService {
         profile.setMmr(request.mmr());
         profile.setPositions(request.positions());
         profile.setLookingForTeam(request.lookingForTeam());
+        profile.setAboutMe(request.aboutMe());
 
         calculateAndSetRank(profile, request.mmr());
 

@@ -50,6 +50,9 @@ public class User implements UserDetails {
     @Column(name = "discord_id", unique = true)
     private String discordId;
 
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
