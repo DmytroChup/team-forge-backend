@@ -1,2 +1,6 @@
+# Set default behavior for all files to handle line endings automatically,
+# ensuring consistent LF endings in the repository.
+* text=auto eol=lf
+
 /mvnw text eol=lf
 *.cmd text eol=crlf
