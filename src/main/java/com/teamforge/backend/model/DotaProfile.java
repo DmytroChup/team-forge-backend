@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -43,6 +44,12 @@ public class DotaProfile {
     private Set<DotaPosition> positions;
 
     private Integer mmr;
+
+    @Column(precision = 5, scale = 2) // e.g., 55.25%
+    private BigDecimal winRate;
+
+    @Column(name = "total_matches")
+    private Integer totalMatches;
 
     @Column(length = 1000)
     private String aboutMe;

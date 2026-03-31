@@ -5,6 +5,7 @@ import com.teamforge.backend.model.User;
 import com.teamforge.backend.model.enums.DotaPosition;
 import com.teamforge.backend.model.enums.DotaRank;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 public record DotaProfileResponse(
@@ -16,6 +17,8 @@ public record DotaProfileResponse(
         DotaRank rank,
         Integer stars,
         Set<DotaPosition> positions,
+        BigDecimal winRate,
+        Integer totalMatches,
         boolean lookingForTeam,
         String steamId,
         String aboutMe
@@ -31,6 +34,8 @@ public record DotaProfileResponse(
                 profile.getRank(),
                 profile.getStars(),
                 profile.getPositions(),
+                profile.getWinRate(),
+                profile.getTotalMatches(),
                 profile.isLookingForTeam(),
                 user.getSteamId(),
                 profile.getAboutMe()
@@ -47,6 +52,8 @@ public record DotaProfileResponse(
                 profile.getRank(),
                 profile.getStars(),
                 profile.getPositions(),
+                profile.getWinRate(),
+                profile.getTotalMatches(),
                 profile.isLookingForTeam(),
                 profile.getUser().getSteamId(),
                 profile.getAboutMe()
