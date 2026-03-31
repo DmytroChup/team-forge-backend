@@ -34,6 +34,12 @@ public class DotaProfileController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/me/refresh-stats")
+    public ResponseEntity<DotaProfileResponse> refreshStats(@AuthenticationPrincipal User user) {
+        DotaProfileResponse response = dotaProfileService.refreshMyProfileStats(user.getId());
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/search")
     public ResponseEntity<List<DotaProfileResponse>> searchPlayers(@RequestBody DotaProfileSearchRequest request) {
         return ResponseEntity.ok(dotaProfileService.searchProfiles(request));
