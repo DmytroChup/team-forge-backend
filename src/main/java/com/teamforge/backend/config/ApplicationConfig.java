@@ -1,6 +1,7 @@
 package com.teamforge.backend.config;
 
 import com.teamforge.backend.repository.UserRepository;
+import com.teamforge.backend.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,7 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username)
+                .map(SecurityUser::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 

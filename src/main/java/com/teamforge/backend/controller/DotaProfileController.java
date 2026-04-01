@@ -1,42 +1,58 @@
 package com.teamforge.backend.controller;
 
+import com.teamforge.backend.dto.DotaProfileResponse;
 import com.teamforge.backend.dto.DotaProfileSearchRequest;
 import com.teamforge.backend.dto.DotaProfileUpdateRequest;
-import com.teamforge.backend.model.DotaProfile;
+import com.teamforge.backend.model.User;
+import com.teamforge.backend.security.SecurityUser;
 import com.teamforge.backend.service.DotaProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/dota")
+@RequestMapping("/api/profiles/dota")
 @RequiredArgsConstructor
 public class DotaProfileController {
 
     private final DotaProfileService dotaProfileService;
 
-    // TODO: после подключения JWT заменить на @AuthenticationPrincipal User user
-    @PutMapping("/profile/{userId}")
-    public DotaProfile updateProfile(
-            @PathVariable Long userId,
+    @PutMapping("/me")
+    public ResponseEntity<DotaProfileResponse> updateProfile(
+            @AuthenticationPrincipal SecurityUser securityUser,
             @Valid @RequestBody DotaProfileUpdateRequest request) {
-        return dotaProfileService.updateProfile(userId, request);
+        DotaProfileResponse response = dotaProfileService.updateMyProfile(securityUser.getId(), request);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteMyProfile(@AuthenticationPrincipal SecurityUser securityUser) {
+        dotaProfileService.deleteMyProfile(securityUser.getId());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/me/refresh-stats")
+    public ResponseEntity<DotaProfileResponse> refreshStats(@AuthenticationPrincipal SecurityUser securityUser) {
+        DotaProfileResponse response = dotaProfileService.refreshMyProfileStats(securityUser.getId());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/search")
-    public List<DotaProfile> searchPlayers(@RequestBody DotaProfileSearchRequest request) {
-        return dotaProfileService.searchProfiles(request);
+    public ResponseEntity<List<DotaProfileResponse>> searchPlayers(@RequestBody DotaProfileSearchRequest request) {
+        return ResponseEntity.ok(dotaProfileService.searchProfiles(request));
     }
 
     @GetMapping("/{id}")
-    public DotaProfile getPlayerById(@PathVariable Long id) {
-        return dotaProfileService.getProfileById(id);
+    public ResponseEntity<DotaProfileResponse> getPlayerById(@PathVariable Long id) {
+        return ResponseEntity.ok(dotaProfileService.getProfileById(id));
     }
 
     @GetMapping
-    public List<DotaProfile> getAllPlayers() {
-        return dotaProfileService.getAllProfiles();
+    public ResponseEntity<List<DotaProfileResponse>> getAllPlayers() {
+        return ResponseEntity.ok(dotaProfileService.getAllProfiles());
     }
 }
