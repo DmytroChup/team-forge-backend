@@ -4,6 +4,7 @@ import com.teamforge.backend.dto.DotaProfileResponse;
 import com.teamforge.backend.dto.DotaProfileSearchRequest;
 import com.teamforge.backend.dto.DotaProfileUpdateRequest;
 import com.teamforge.backend.model.User;
+import com.teamforge.backend.security.SecurityUser;
 import com.teamforge.backend.service.DotaProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,21 +23,21 @@ public class DotaProfileController {
 
     @PutMapping("/me")
     public ResponseEntity<DotaProfileResponse> updateProfile(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal SecurityUser securityUser,
             @Valid @RequestBody DotaProfileUpdateRequest request) {
-        DotaProfileResponse response = dotaProfileService.updateMyProfile(user.getId(), request);
+        DotaProfileResponse response = dotaProfileService.updateMyProfile(securityUser.getId(), request);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMyProfile(@AuthenticationPrincipal User user) {
-        dotaProfileService.deleteMyProfile(user.getId());
+    public ResponseEntity<Void> deleteMyProfile(@AuthenticationPrincipal SecurityUser securityUser) {
+        dotaProfileService.deleteMyProfile(securityUser.getId());
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/me/refresh-stats")
-    public ResponseEntity<DotaProfileResponse> refreshStats(@AuthenticationPrincipal User user) {
-        DotaProfileResponse response = dotaProfileService.refreshMyProfileStats(user.getId());
+    public ResponseEntity<DotaProfileResponse> refreshStats(@AuthenticationPrincipal SecurityUser securityUser) {
+        DotaProfileResponse response = dotaProfileService.refreshMyProfileStats(securityUser.getId());
         return ResponseEntity.ok(response);
     }
 

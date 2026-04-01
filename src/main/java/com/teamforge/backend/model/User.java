@@ -1,6 +1,7 @@
 package com.teamforge.backend.model;
 
 import com.teamforge.backend.model.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.jspecify.annotations.NonNull;
@@ -29,7 +30,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,8 +42,8 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
-    private String passwordHash;
+    @Column(name = "password_hash", nullable = false)
+    private String password;
 
     @Column(name = "steam_id", unique = true)
     private String steamId;
@@ -61,8 +62,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean enabled = true;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private transient DotaProfile dotaProfile;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private DotaProfile dotaProfile;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -70,21 +71,4 @@ public class User implements UserDetails {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
-
-    @Override
-    @NonNull
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
-    }
-
-    @Override
-    public @Nullable String getPassword() {
-        return passwordHash;
-    }
-
-    @Override
-    @NonNull
-    public String getUsername() {
-        return email;
-    }
 }
