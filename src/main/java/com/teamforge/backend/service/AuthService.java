@@ -6,6 +6,7 @@ import com.teamforge.backend.dto.auth.RegisterRequest;
 import com.teamforge.backend.model.User;
 import com.teamforge.backend.model.enums.Role;
 import com.teamforge.backend.repository.UserRepository;
+import com.teamforge.backend.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,14 +28,14 @@ public class AuthService {
         var user = User.builder()
                 .nickname(request.nickname())
                 .email(request.email())
-                .passwordHash(passwordEncoder.encode(request.password()))
+                .password(passwordEncoder.encode(request.password()))
                 .role(Role.USER)
                 .createdAt(LocalDateTime.now())
                 .enabled(true)
                 .build();
 
         userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(new SecurityUser(user));
 
         return AuthResponse.builder()
                 .token(jwtToken)
@@ -50,7 +51,7 @@ public class AuthService {
         );
         var user = userRepository.findByEmail(request.email())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(new SecurityUser(user));
         return AuthResponse.builder()
                 .token(jwtToken)
                 .build();
