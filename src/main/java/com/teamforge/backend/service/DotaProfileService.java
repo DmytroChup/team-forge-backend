@@ -32,6 +32,11 @@ public class DotaProfileService {
     private final OpenDotaApiService openDotaApiService;
 
     /**
+     * The constant used to convert a 64-bit SteamID to a 32-bit account ID.
+     */
+    private static final long STEAM_ID_64_TO_ACCOUNT_ID_32_CONVERSION_CONSTANT = 76561197960265728L;
+
+    /**
      * Updates or creates a Dota profile for the current authenticated user.
      * Uses the userId to ensure we work with a managed entity in the current persistence context.
      */
@@ -88,6 +93,13 @@ public class DotaProfileService {
         }
 
         DotaProfile profile = user.getDotaProfile();
+
+        // Ensure profile exists before attempting to update stats
+        if (profile == null) {
+            profile = new DotaProfile();
+            profile.assignToUser(user);
+        }
+
         profile.setTotalMatches(totalMatches);
         profile.setWinRate(winRate);
 
@@ -123,6 +135,7 @@ public class DotaProfileService {
 
         DotaProfile profile = user.getDotaProfile();
         if (profile != null) {
+            user.setDotaProfile(null);
             dotaProfileRepository.delete(profile);
         }
     }
@@ -152,6 +165,6 @@ public class DotaProfileService {
      */
     private String convertSteamId64ToAccountId32(String steamId64) {
         long steamId64Long = Long.parseLong(steamId64);
-        return String.valueOf(steamId64Long - 76561197960265728L);
+        return String.valueOf(steamId64Long - STEAM_ID_64_TO_ACCOUNT_ID_32_CONVERSION_CONSTANT);
     }
 }
