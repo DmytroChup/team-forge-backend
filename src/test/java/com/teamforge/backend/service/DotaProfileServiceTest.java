@@ -1,8 +1,7 @@
 package com.teamforge.backend.service;
 
-import com.teamforge.backend.dto.DotaProfileResponse;
-import com.teamforge.backend.dto.DotaProfileUpdateRequest;
-import com.teamforge.backend.model.DotaProfile;
+import com.teamforge.backend.dto.dota.DotaProfileResponse;
+import com.teamforge.backend.dto.dota.DotaProfileUpdateRequest;
 import com.teamforge.backend.model.User;
 import com.teamforge.backend.model.enums.DotaRank;
 import com.teamforge.backend.repository.DotaProfileRepository;

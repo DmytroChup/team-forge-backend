@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface DotaProfileRepository extends JpaRepository<DotaProfile, Long>, JpaSpecificationExecutor<DotaProfile> {
 
-    Optional<DotaProfile> findByUserId(Long userId);
+    Optional<DotaProfile> findByUser_Nickname(String nickname);
 }

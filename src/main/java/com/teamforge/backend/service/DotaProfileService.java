@@ -1,14 +1,11 @@
 package com.teamforge.backend.service;
 
 import com.teamforge.backend.config.dota.DotaMmrTable;
-import com.teamforge.backend.dto.DotaProfileResponse;
-import com.teamforge.backend.dto.DotaProfileSearchRequest;
-import com.teamforge.backend.dto.DotaProfileUpdateRequest;
+import com.teamforge.backend.dto.dota.DotaProfileResponse;
+import com.teamforge.backend.dto.dota.DotaProfileSearchRequest;
+import com.teamforge.backend.dto.dota.DotaProfileUpdateRequest;
 import com.teamforge.backend.dto.opendota.OpenDotaWinLossResponse;
-import com.teamforge.backend.exception.ExternalApiException;
-import com.teamforge.backend.exception.DotaProfileNotFoundException;
-import com.teamforge.backend.exception.UserNotFoundException;
-import com.teamforge.backend.exception.ValidationException;
+import com.teamforge.backend.exception.*;
 import com.teamforge.backend.model.DotaProfile;
 import com.teamforge.backend.model.User;
 import com.teamforge.backend.repository.DotaProfileRepository;
@@ -145,6 +142,12 @@ public class DotaProfileService {
         return dotaProfileRepository.findAll(spec).stream()
                 .map(DotaProfileResponse::fromDotaProfile)
                 .toList();
+    }
+
+    public DotaProfileResponse getProfileByNickname(String nickname) {
+        DotaProfile profile = dotaProfileRepository.findByUser_Nickname(nickname)
+                .orElseThrow(() -> new DotaProfileNotFoundException("Profile not found: " + nickname));
+        return DotaProfileResponse.fromDotaProfile(profile);
     }
 
     public DotaProfileResponse getProfileById(Long id) {

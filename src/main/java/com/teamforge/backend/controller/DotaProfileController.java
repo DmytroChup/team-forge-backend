@@ -1,9 +1,8 @@
 package com.teamforge.backend.controller;
 
-import com.teamforge.backend.dto.DotaProfileResponse;
-import com.teamforge.backend.dto.DotaProfileSearchRequest;
-import com.teamforge.backend.dto.DotaProfileUpdateRequest;
-import com.teamforge.backend.model.User;
+import com.teamforge.backend.dto.dota.DotaProfileResponse;
+import com.teamforge.backend.dto.dota.DotaProfileSearchRequest;
+import com.teamforge.backend.dto.dota.DotaProfileUpdateRequest;
 import com.teamforge.backend.security.SecurityUser;
 import com.teamforge.backend.service.DotaProfileService;
 import jakarta.validation.Valid;
@@ -44,6 +43,11 @@ public class DotaProfileController {
     @PostMapping("/search")
     public ResponseEntity<List<DotaProfileResponse>> searchPlayers(@RequestBody DotaProfileSearchRequest request) {
         return ResponseEntity.ok(dotaProfileService.searchProfiles(request));
+    }
+
+    @GetMapping("/by-nickname/{nickname}")
+    public ResponseEntity<DotaProfileResponse> getByNickname(@PathVariable String nickname) {
+        return ResponseEntity.ok(dotaProfileService.getProfileByNickname(nickname));
     }
 
     @GetMapping("/{id}")

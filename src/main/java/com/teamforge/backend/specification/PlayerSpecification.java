@@ -1,6 +1,6 @@
 package com.teamforge.backend.specification;
 
-import com.teamforge.backend.dto.DotaProfileSearchRequest;
+import com.teamforge.backend.dto.dota.DotaProfileSearchRequest;
 import com.teamforge.backend.model.DotaProfile;
 import jakarta.persistence.criteria.Predicate;
 import lombok.experimental.UtilityClass;
