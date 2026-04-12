@@ -1,4 +1,4 @@
-package com.teamforge.backend.dto;
+package com.teamforge.backend.dto.dota;
 
 import com.teamforge.backend.model.DotaProfile;
 import com.teamforge.backend.model.User;

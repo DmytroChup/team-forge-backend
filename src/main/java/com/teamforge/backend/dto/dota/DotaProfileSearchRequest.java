@@ -1,4 +1,4 @@
-package com.teamforge.backend.dto;
+package com.teamforge.backend.dto.dota;
 
 import com.teamforge.backend.model.enums.DotaPosition;
 import com.teamforge.backend.model.enums.DotaRank;
