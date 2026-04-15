@@ -1,6 +1,5 @@
 package com.teamforge.backend.service;
 
-import com.teamforge.backend.config.dota.DotaMmrTable;
 import com.teamforge.backend.dto.dota.DotaProfileResponse;
 import com.teamforge.backend.dto.dota.DotaProfileSearchRequest;
 import com.teamforge.backend.dto.dota.DotaProfileUpdateRequest;
@@ -50,12 +49,9 @@ public class DotaProfileService {
             profile.assignToUser(user);
         }
 
-        profile.setMmr(request.mmr());
         profile.setPositions(request.positions());
         profile.setLookingForTeam(request.lookingForTeam());
         profile.setAboutMe(request.aboutMe());
-
-        calculateAndSetRank(profile, request.mmr());
 
         dotaProfileRepository.save(profile);
 
@@ -103,26 +99,6 @@ public class DotaProfileService {
         dotaProfileRepository.save(profile);
 
         return DotaProfileResponse.fromEntity(user);
-    }
-
-    private void calculateAndSetRank(DotaProfile profile, Integer mmr) {
-        if (mmr == null || mmr <= 0) {
-            profile.setRank(null);
-            profile.setStars(null);
-            return;
-        }
-
-        var entry = DotaMmrTable.getMmrThresholds().floorEntry(mmr);
-
-        // If for some reason the map is empty or changed, still use a safe check
-        if (entry != null) {
-            DotaMmrTable.RankInfo info = entry.getValue();
-            profile.setRank(info.rank());
-            profile.setStars(info.stars());
-        } else {
-            profile.setRank(null);
-            profile.setStars(null);
-        }
     }
 
     @Transactional
