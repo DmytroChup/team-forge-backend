@@ -3,7 +3,6 @@ package com.teamforge.backend.dto.dota;
 import com.teamforge.backend.model.DotaProfile;
 import com.teamforge.backend.model.User;
 import com.teamforge.backend.model.enums.DotaPosition;
-import com.teamforge.backend.model.enums.DotaRank;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -14,8 +13,7 @@ public record DotaProfileResponse(
         String nickname,
         String avatarUrl,
         Integer mmr,
-        DotaRank rank,
-        Integer stars,
+        Integer rankTier,
         Set<DotaPosition> positions,
         BigDecimal winRate,
         Integer totalMatches,
@@ -31,8 +29,7 @@ public record DotaProfileResponse(
                 user.getNickname(),
                 user.getAvatarUrl(),
                 profile.getMmr(),
-                profile.getRank(),
-                profile.getStars(),
+                profile.getRankTier(),
                 profile.getPositions(),
                 profile.getWinRate(),
                 profile.getTotalMatches(),
@@ -49,8 +46,7 @@ public record DotaProfileResponse(
                 profile.getUser().getNickname(),
                 profile.getUser().getAvatarUrl(),
                 profile.getMmr(),
-                profile.getRank(),
-                profile.getStars(),
+                profile.getRankTier(),
                 profile.getPositions(),
                 profile.getWinRate(),
                 profile.getTotalMatches(),

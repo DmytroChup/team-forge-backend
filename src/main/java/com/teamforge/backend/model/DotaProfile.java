@@ -1,7 +1,6 @@
 package com.teamforge.backend.model;
 
 import com.teamforge.backend.model.enums.DotaPosition;
-import com.teamforge.backend.model.enums.DotaRank;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -33,10 +32,14 @@ public class DotaProfile {
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     private User user;
 
-    @Enumerated(EnumType.STRING)
-    private DotaRank rank;
-
-    private Integer stars;
+    /**
+     * Raw rank_tier from OpenDota API.
+     * First digit: rank (1=Herald, 2=Guardian, ..., 8=Immortal).
+     * Second digit: stars (1–5, 0 for Immortal).
+     * Example: 54 = Divine 4, 80 = Immortal.
+     */
+    @Column(name = "rank_tier")
+    private Integer rankTier;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "dota_profile_positions", joinColumns = @JoinColumn(name = "profile_id"))

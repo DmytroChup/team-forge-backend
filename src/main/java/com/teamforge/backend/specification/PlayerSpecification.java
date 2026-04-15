@@ -16,8 +16,8 @@ public class PlayerSpecification {
         return (root, query, criteriaBuilder) -> {
             var predicates = new ArrayList<Predicate>();
 
-            if(!CollectionUtils.isEmpty(request.ranks())) {
-                predicates.add(root.get("rank").in(request.ranks()));
+            if(!CollectionUtils.isEmpty(request.rankTiers())) {
+                predicates.add(root.get("rankTier").in(request.rankTiers()));
             }
 
             if(!CollectionUtils.isEmpty(request.positions())) {
