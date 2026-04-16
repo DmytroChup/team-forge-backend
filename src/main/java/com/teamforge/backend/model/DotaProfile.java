@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "dota_profiles", indexes = {
         @Index(name = "idx_dota_user_id", columnList = "user_id"),
-        @Index(name = "idx_dota_rank", columnList = "rank")
+        @Index(name = "idx_dota_rank_tier", columnList = "rank_tier")
 })
 @Getter
 @Setter
@@ -46,7 +46,8 @@ public class DotaProfile {
     @Enumerated(EnumType.STRING)
     private Set<DotaPosition> positions;
 
-    private Integer mmr;
+    @Column(name = "estimated_mmr")
+    private Integer estimatedMmr;
 
     @Column(precision = 5, scale = 2) // e.g., 55.25%
     private BigDecimal winRate;
@@ -60,6 +61,9 @@ public class DotaProfile {
     @Builder.Default
     @Column(nullable = false)
     private boolean lookingForTeam = false;
+
+    @Column(name = "last_stats_refreshed_at")
+    private LocalDateTime lastStatsRefreshedAt;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
