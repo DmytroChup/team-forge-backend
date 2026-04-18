@@ -1,0 +1,11 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+jwt:
+  secret: "e8a296194df3bda88f577f3f6e2d796d82c7899a527dc6ead5af28e720b07b4f"
+  expiration: 900000 # 15 minutes
+  refresh-token:
+    expiration: 604800000 # 7 days
