@@ -9,7 +9,6 @@ import java.util.Set;
 
 public record DotaProfileResponse(
         Long profileId,
-        Long userId,
         String nickname,
         String avatarUrl,
         Integer estimatedMmr,
@@ -25,7 +24,6 @@ public record DotaProfileResponse(
         DotaProfile profile = user.getDotaProfile();
         return new DotaProfileResponse(
                 profile.getId(),
-                user.getId(),
                 user.getNickname(),
                 user.getAvatarUrl(),
                 profile.getEstimatedMmr(),
@@ -42,7 +40,6 @@ public record DotaProfileResponse(
     public static DotaProfileResponse fromDotaProfile(DotaProfile profile) {
         return new DotaProfileResponse(
                 profile.getId(),
-                profile.getUser().getId(),
                 profile.getUser().getNickname(),
                 profile.getUser().getAvatarUrl(),
                 profile.getEstimatedMmr(),

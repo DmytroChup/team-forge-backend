@@ -6,6 +6,7 @@ import java.util.List;
 
 public record DotaProfileSearchRequest(
         List<Integer> rankTiers,
-        List<DotaPosition> positions
+        List<DotaPosition> positions,
+        boolean includeUnranked
 ) {
 }

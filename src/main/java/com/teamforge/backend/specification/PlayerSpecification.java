@@ -16,8 +16,20 @@ public class PlayerSpecification {
         return (root, query, criteriaBuilder) -> {
             var predicates = new ArrayList<Predicate>();
 
-            if(!CollectionUtils.isEmpty(request.rankTiers())) {
-                predicates.add(root.get("rankTier").in(request.rankTiers()));
+            if (!CollectionUtils.isEmpty(request.rankTiers()) || request.includeUnranked()) {
+                var rankPredicates = new ArrayList<Predicate>();
+
+                if (!CollectionUtils.isEmpty(request.rankTiers())) {
+                    rankPredicates.add(root.get("rankTier").in(request.rankTiers()));
+                }
+
+                if (request.includeUnranked()) {
+                    rankPredicates.add(root.get("rankTier").isNull());
+                }
+
+                predicates.add(criteriaBuilder.or(
+                        rankPredicates.toArray(Predicate[]::new)
+                ));
             }
 
             if(!CollectionUtils.isEmpty(request.positions())) {
