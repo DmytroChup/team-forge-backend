@@ -10,6 +10,7 @@ import com.teamforge.backend.repository.RefreshTokenRepository;
 import com.teamforge.backend.repository.UserRepository;
 import com.teamforge.backend.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +22,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -80,7 +82,6 @@ public class AuthService {
 
     @Transactional
     public AuthResult refreshToken(String token) {
-
         RefreshToken storedToken = refreshTokenRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Refresh token not found"));
 

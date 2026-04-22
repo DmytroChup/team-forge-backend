@@ -50,7 +50,7 @@ public class AuthController {
         ResponseCookie deleteCookie = ResponseCookie.from("refresh_token", "")
                 .httpOnly(true)
                 .secure(false) // todo: Change to 'true' in production (requires HTTPS)
-                .path("/api/auth/refresh-token")
+                .path("/api/auth")
                 .maxAge(0)
                 .sameSite("Strict")
                 .build();
@@ -70,7 +70,7 @@ public class AuthController {
         ResponseCookie cookie = ResponseCookie.from("refresh_token", result.refreshToken())
                 .httpOnly(true)       // Hide from JavaScript on the frontend (XSS protection)
                 .secure(false)        // todo: Change to 'true' in production (requires HTTPS)
-                .path("/api/auth/refresh-token") // Cookie will be sent ONLY to this specific endpoint
+                .path("/api/auth") // Cookie will be sent ONLY to this specific endpoint
                 .maxAge(refreshTokenExpirationMs / 1000) // Expiration time in seconds
                 .sameSite("Strict")   // Protection against Cross-Site Request Forgery (CSRF)
                 .build();
