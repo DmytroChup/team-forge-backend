@@ -14,6 +14,8 @@ import com.teamforge.backend.repository.UserRepository;
 import com.teamforge.backend.specification.PlayerSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,8 +78,7 @@ public class DotaProfileService {
 
         // Ensure profile exists before attempting to update stats
         if (profile == null) {
-            profile = new DotaProfile();
-            profile.assignToUser(user);
+            throw new DotaProfileNotFoundException("Profile not found. Please create a profile first.");
         }
 
         if (profile.getLastStatsRefreshedAt() != null) {
@@ -135,11 +136,10 @@ public class DotaProfileService {
         }
     }
 
-    public List<DotaProfileResponse> searchProfiles(DotaProfileSearchRequest request) {
+    public Page<DotaProfileResponse> searchProfiles(DotaProfileSearchRequest request, Pageable pageable) {
         var spec = PlayerSpecification.getSpec(request);
-        return dotaProfileRepository.findAll(spec).stream()
-                .map(DotaProfileResponse::fromDotaProfile)
-                .toList();
+        return dotaProfileRepository.findAll(spec, pageable)
+                .map(DotaProfileResponse::fromDotaProfile);
     }
 
     public DotaProfileResponse getProfileByNickname(String nickname) {
@@ -154,10 +154,9 @@ public class DotaProfileService {
         return DotaProfileResponse.fromDotaProfile(profile);
     }
 
-    public List<DotaProfileResponse> getAllProfiles() {
-        return dotaProfileRepository.findAll().stream()
-                .map(DotaProfileResponse::fromDotaProfile)
-                .toList();
+    public Page<DotaProfileResponse> getAllProfiles(Pageable pageable) {
+        return dotaProfileRepository.findAll(pageable)
+                .map(DotaProfileResponse::fromDotaProfile);
     }
 
     /**

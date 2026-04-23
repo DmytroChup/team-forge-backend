@@ -7,11 +7,12 @@ import com.teamforge.backend.security.SecurityUser;
 import com.teamforge.backend.service.DotaProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/profiles/dota")
@@ -41,8 +42,10 @@ public class DotaProfileController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<DotaProfileResponse>> searchPlayers(@RequestBody DotaProfileSearchRequest request) {
-        return ResponseEntity.ok(dotaProfileService.searchProfiles(request));
+    public ResponseEntity<Page<DotaProfileResponse>> searchPlayers(
+            @RequestBody DotaProfileSearchRequest request,
+            @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(dotaProfileService.searchProfiles(request, pageable));
     }
 
     @GetMapping("/by-nickname/{nickname}")
@@ -56,7 +59,8 @@ public class DotaProfileController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DotaProfileResponse>> getAllPlayers() {
-        return ResponseEntity.ok(dotaProfileService.getAllProfiles());
+    public ResponseEntity<Page<DotaProfileResponse>> getAllPlayers(
+            @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(dotaProfileService.getAllProfiles(pageable));
     }
 }
