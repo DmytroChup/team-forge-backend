@@ -15,7 +15,9 @@ import com.teamforge.backend.specification.PlayerSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,8 +139,9 @@ public class DotaProfileService {
     }
 
     public Page<DotaProfileResponse> searchProfiles(DotaProfileSearchRequest request, Pageable pageable) {
+        Pageable sortedPageable = applySafeSort(pageable);
         var spec = PlayerSpecification.getSpec(request);
-        return dotaProfileRepository.findAll(spec, pageable)
+        return dotaProfileRepository.findAll(spec, sortedPageable)
                 .map(DotaProfileResponse::fromDotaProfile);
     }
 
@@ -155,8 +158,32 @@ public class DotaProfileService {
     }
 
     public Page<DotaProfileResponse> getAllProfiles(Pageable pageable) {
-        return dotaProfileRepository.findAll(pageable)
+        Pageable sortedPageable = applySafeSort(pageable);
+        return dotaProfileRepository.findAll(sortedPageable)
                 .map(DotaProfileResponse::fromDotaProfile);
+    }
+
+    /**
+     * Wraps the incoming Pageable and adds NULLS LAST to all sort orders.
+     * Prevents NULL winRate/MMR from floating to the top when sorting DESC.
+     */
+    private Pageable applySafeSort(Pageable pageable) {
+        if (!pageable.getSort().isSorted()) {
+            return pageable;
+        }
+
+        List<Sort.Order> safeOrders = pageable.getSort().stream()
+                .map(order -> order.isDescending()
+                        ? Sort.Order.desc(order.getProperty()).nullsLast()
+                        : Sort.Order.asc(order.getProperty()).nullsLast()
+                )
+                .toList();
+
+        return PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(safeOrders)
+        );
     }
 
     /**
