@@ -2,6 +2,7 @@ package com.teamforge.backend.specification;
 
 import com.teamforge.backend.dto.dota.DotaProfileSearchRequest;
 import com.teamforge.backend.model.DotaProfile;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,31 +14,65 @@ import java.util.ArrayList;
 public class PlayerSpecification {
 
     public static Specification<DotaProfile> getSpec(DotaProfileSearchRequest request) {
-        return (root, query, criteriaBuilder) -> {
-            var predicates = new ArrayList<Predicate>();
+        return Specification.where(hasRanks(request))
+                .and(hasPositions(request))
+                .and(hasMinWinRate(request))
+                .and(hasMinMatches(request))
+                .and(requiresSteam(request))
+                .and(isLookingForTeam(request));
+    }
 
-            if (!CollectionUtils.isEmpty(request.rankTiers()) || request.includeUnranked()) {
-                var rankPredicates = new ArrayList<Predicate>();
+    private static Specification<DotaProfile> hasRanks(DotaProfileSearchRequest request) {
+        return (root, query, cb) -> {
+            boolean hasRanks = !CollectionUtils.isEmpty(request.rankTiers());
 
-                if (!CollectionUtils.isEmpty(request.rankTiers())) {
-                    rankPredicates.add(root.get("rankTier").in(request.rankTiers()));
-                }
-
-                if (request.includeUnranked()) {
-                    rankPredicates.add(root.get("rankTier").isNull());
-                }
-
-                predicates.add(criteriaBuilder.or(
-                        rankPredicates.toArray(Predicate[]::new)
-                ));
+            if (!hasRanks && !request.includeUnranked()) {
+                return cb.conjunction();
             }
 
-            if(!CollectionUtils.isEmpty(request.positions())) {
-                predicates.add(root.join("positions").in(request.positions()));
+            var rankPredicates = new ArrayList<Predicate>();
+            if (hasRanks) {
+                rankPredicates.add(root.get("rankTier").in(request.rankTiers()));
+            }
+            if (request.includeUnranked()) {
+                rankPredicates.add(root.get("rankTier").isNull());
+            }
+
+            return cb.or(rankPredicates.toArray(Predicate[]::new));
+        };
+    }
+
+    private static Specification<DotaProfile> hasPositions(DotaProfileSearchRequest request) {
+        return (root, query, cb) -> {
+            if (CollectionUtils.isEmpty(request.positions())) {
+                return cb.conjunction();
+            }
+
+            if(query.getResultType() != Long.class) {
                 query.distinct(true);
             }
 
-            return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
+            return root.join("positions", JoinType.LEFT).in(request.positions());
         };
+    }
+
+    private static Specification<DotaProfile> hasMinWinRate(DotaProfileSearchRequest request) {
+        return (root, query, cb) -> request.minWinRate() == null ? cb.conjunction() :
+                cb.greaterThanOrEqualTo(root.get("winRate"), request.minWinRate());
+    }
+
+    private static Specification<DotaProfile> hasMinMatches(DotaProfileSearchRequest request) {
+        return (root, query, cb) -> request.minMatches() == null ? cb.conjunction() :
+                cb.greaterThanOrEqualTo(root.get("totalMatches"), request.minMatches());
+    }
+
+    private static Specification<DotaProfile> requiresSteam(DotaProfileSearchRequest request) {
+        return (root, query, cb) -> Boolean.TRUE.equals(request.requireSteam()) ?
+                cb.isNotNull(root.join("user", JoinType.LEFT).get("steamId")) : cb.conjunction();
+    }
+
+    private static Specification<DotaProfile> isLookingForTeam(DotaProfileSearchRequest request) {
+        return (root, query, cb) -> Boolean.TRUE.equals(request.lookingForTeam()) ?
+                cb.isTrue(root.get("lookingForTeam")) : cb.conjunction();
     }
 }
