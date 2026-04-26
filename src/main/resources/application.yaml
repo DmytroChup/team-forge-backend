@@ -1,6 +1,8 @@
 spring:
   application:
     name: team-forge-backend
+  profiles:
+    active: dev
 
   datasource:
     url: jdbc:postgresql://localhost:5444/teamforge
