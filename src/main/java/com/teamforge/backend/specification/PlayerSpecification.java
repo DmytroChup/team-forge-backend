@@ -2,6 +2,7 @@ package com.teamforge.backend.specification;
 
 import com.teamforge.backend.dto.dota.DotaProfileSearchRequest;
 import com.teamforge.backend.model.DotaProfile;
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import lombok.experimental.UtilityClass;
@@ -14,12 +15,39 @@ import java.util.ArrayList;
 public class PlayerSpecification {
 
     public static Specification<DotaProfile> getSpec(DotaProfileSearchRequest request) {
-        return Specification.where(hasRanks(request))
+        return Specification.where(hasNickname(request))
+                .and(hasRanks(request))
                 .and(hasPositions(request))
                 .and(hasMinWinRate(request))
                 .and(hasMinMatches(request))
                 .and(requiresSteam(request))
                 .and(isLookingForTeam(request));
+    }
+
+    private static Specification<DotaProfile> hasNickname(DotaProfileSearchRequest request) {
+        return (root, query, cb) -> {
+            if (request.nickname() == null || request.nickname().isBlank()) {
+                return cb.conjunction();
+            }
+            String searchStr = request.nickname().trim().toLowerCase();
+            String pattern = "%" + searchStr + "%";
+
+            Expression<String> nicknameExpr = root.join("user", JoinType.LEFT).get("nickname");
+
+            if (query.getResultType() != Long.class && query.getOrderList().isEmpty()) {
+                query.orderBy(
+                        cb.asc(
+                                cb.selectCase()
+                                        .when(cb.equal(cb.lower(nicknameExpr), searchStr), 0)
+                                        .otherwise(1)
+                        ),
+                        cb.asc(cb.length(nicknameExpr)),
+                        cb.asc(nicknameExpr)
+                );
+            }
+
+            return cb.like(cb.lower(nicknameExpr), pattern);
+        };
     }
 
     private static Specification<DotaProfile> hasRanks(DotaProfileSearchRequest request) {

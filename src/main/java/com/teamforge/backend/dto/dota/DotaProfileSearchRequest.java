@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public record DotaProfileSearchRequest(
+        String nickname,
         List<Integer> rankTiers,
         List<DotaPosition> positions,
         boolean includeUnranked,
